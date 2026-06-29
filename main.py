@@ -1,16 +1,16 @@
-#Importing all the necessary librbaries
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from database import create_tables
 import os
 
-#Loading the environment variables from the .env file
+# Load environment variables from .env file
 load_dotenv()
 
-#Creating the FastApi application
+# Create the FastAPI app
 app = FastAPI(
     title="Utilize",
-    description="An AI-Powered Personalized Household Bill Savings Advisor for London Households",
+    description="AI-Powered Household Bill Savings Advisor for London Households",
     version="1.0.0"
 )
 
@@ -23,11 +23,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Test route - just to check the API is working
+# Create database tables when the app starts
+@app.on_event("startup")
+def startup():
+    create_tables()
+    print("Database tables created")
+    print("Utilize is running")
+
+# Test route
 @app.get("/")
 def home():
     return {
-        "message": "Welcome to Utilize",
+        "message": "Utilize",
         "status": "running",
         "version": "1.0.0"
     }
